@@ -1,4 +1,24 @@
-stage('Deploy to K3s') {
+pipeline {
+    agent any
+
+    environment {
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'subway', url: 'https://github.com/prez77/secret-project-User-2.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t local-web-app:latest .'
+            }
+        }
+
+        stage('Deploy to K3s') {
             steps {
                 sh '''
                 cat <<EOF | kubectl apply -f -
@@ -34,6 +54,8 @@ spec:
       targetPort: 80
       nodePort: 30080
 EOF
-'''
+                '''
             }
         }
+    }
+}
