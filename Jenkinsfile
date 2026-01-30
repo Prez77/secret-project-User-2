@@ -18,7 +18,7 @@ pipeline {
 
       stage('Deploy to K3s') {
             environment {
-                // This tells Jenkins to use its local copy of the config
+                // This tells Jenkins to use its local copy of the configure
                 KUBECONFIG = '/var/lib/jenkins/.kube/config'
             }
             steps {
