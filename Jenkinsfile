@@ -16,42 +16,14 @@ pipeline {
             }
         }
 
-        stage('Deploy to K3s') {
+      stage('Deploy to K3s') {
+            environment {
+                // This tells Jenkins to use its local copy of the config
+                KUBECONFIG = '/var/lib/jenkins/.kube/config'
+            }
             steps {
-                // Applies the deployment logic to your K3s cluster
                 sh 'kubectl apply -f - <<EOF\n' +
-                   'apiVersion: apps/v1\n' +
-                   'kind: Deployment\n' +
-                   'metadata:\n' +
-                   '  name: web-app\n' +
-                   'spec:\n' +
-                   '  replicas: 1\n' +
-                   '  selector:\n' +
-                   '    matchLabels:\n' +
-                   '      app: web-app\n' +
-                   '  template:\n' +
-                   '    metadata:\n' +
-                   '      labels:\n' +
-                   '        app: web-app\n' +
-                   '    spec:\n' +
-                   '      containers:\n' +
-                   '      - name: nginx\n' +
-                   '        image: local-web-app:latest\n' +
-                   '        imagePullPolicy: Never\n' +
-                   '---\n' +
-                   'apiVersion: v1\n' +
-                   'kind: Service\n' +
-                   'metadata:\n' +
-                   '  name: web-service\n' +
-                   'spec:\n' +
-                   '  type: NodePort\n' +
-                   '  selector:\n' +
-                   '    app: web-app\n' +
-                   '  ports:\n' +
-                   '    - port: 80\n' +
-                   '      targetPort: 80\n' +
-                   '      nodePort: 30080\n' +
-                   'EOF'
+                // ... (the rest of your deployment code)
             }
         }
     }
